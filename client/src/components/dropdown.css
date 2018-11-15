@@ -1,0 +1,29 @@
+.container {
+  margin-bottom: 30px !important;
+  margin-top: 30px !important;
+}
+
+.dropdown {
+  display: flex !important;
+}
+
+#dropdown-basic-1 {
+  margin: 15px;
+  font-size: 20px;
+}
+
+.btn {
+  width: 40%;
+}
+
+.caret {
+  display: none;
+}
+
+.dropdown-content {
+  font-size: 1.5vw;
+}
+
+.list-content {
+  font-size: 1.5vw;
+}

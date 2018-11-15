@@ -1,0 +1,34 @@
+{
+  "name": "reactexpress",
+  "version": "1.0.0",
+  "engines": {
+    "node": "10.3.0",
+    "npm": "6.x"
+  },
+  "description": "tech test to visualize data for Birdie",
+  "main": "server.js",
+  "scripts": {
+    "heroku-prebuild": "echo This runs before Heroku installs your dependencies.",
+    "heroku-postbuild": "echo This runs afterwards.",
+    "client-install": "cd client && npm install",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "Chitty Liu",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.14.6"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "bootstrap": "^4.1.1",
+    "concurrently": "^3.5.1",
+    "cors": "^2.8.5",
+    "express": "^4.16.2",
+    "morgan": "^1.9.1",
+    "mysql": "^2.16.0",
+    "react-bootstrap": "^0.32.4"
+  }
+}
