@@ -61,6 +61,9 @@ app.get("/api/update/list", (req, res) => {
   });
 
   const newSelection = app.get("newselection");
+  if (newSelection === null) {
+    newSelection = "class of worker";
+  }
   const selectColumn = `SELECT (${newSelection}) AS category, COUNT(${newSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${newSelection} ORDER BY COUNT(${newSelection}) DESC`;
 
   connection.query(selectColumn, (err, rows, fields) => {

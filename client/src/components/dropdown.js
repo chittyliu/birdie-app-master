@@ -20,7 +20,11 @@ class Dropdown extends Component {
       .then(res => res.json())
       .then(rows => this.setState({ dropdowns: rows }));
 
-    let selection = this.state.selection;
+    const selection = this.state.selection;
+    fetch("/api/update/list")
+      .then(res => res.json())
+      .then(rows => this.setState({ lists: rows }));
+
     fetch("/api/update", {
       method: "PUT",
       headers: {
@@ -28,22 +32,10 @@ class Dropdown extends Component {
       },
       body: JSON.stringify({ selection: selection })
     });
-    // .then(res => res.json());
-    // .then(rows => this.setState({ lists: rows }));
-    fetch("/api/update/list")
-      .then(res => res.json())
-      .then(rows => this.setState({ lists: rows }));
   };
-
-  // fetchList = () => {
-  //   fetch("/api/update/list")
-  //     .then(res => res.json())
-  //     .then(rows => this.setState({ lists: rows }));
-  // };
 
   componentDidMount() {
     this.fetchData();
-    // this.fetchList();
   }
 
   onChange(event) {
@@ -71,7 +63,6 @@ class Dropdown extends Component {
                 key={key}
                 onClick={event => this.onChange(event)}
                 onSelect={this.fetchData}
-                // onVolumeChange={this.fetchList}
               >
                 {button.Field}
               </MenuItem>
