@@ -27,13 +27,23 @@ class Dropdown extends Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ selection: selection })
-    })
+    });
+    // .then(res => res.json());
+    // .then(rows => this.setState({ lists: rows }));
+    fetch("/api/update/list")
       .then(res => res.json())
       .then(rows => this.setState({ lists: rows }));
   };
 
+  // fetchList = () => {
+  //   fetch("/api/update/list")
+  //     .then(res => res.json())
+  //     .then(rows => this.setState({ lists: rows }));
+  // };
+
   componentDidMount() {
     this.fetchData();
+    // this.fetchList();
   }
 
   onChange(event) {
@@ -45,6 +55,7 @@ class Dropdown extends Component {
     const buttons = this.state.dropdowns;
     const selection = this.state.selection;
     const lists = this.state.lists;
+    console.log(selection, lists);
 
     return (
       <div className="container">
@@ -60,7 +71,7 @@ class Dropdown extends Component {
                 key={key}
                 onClick={event => this.onChange(event)}
                 onSelect={this.fetchData}
-                // onMouseDown={this.fetchData}
+                // onVolumeChange={this.fetchList}
               >
                 {button.Field}
               </MenuItem>

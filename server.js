@@ -47,31 +47,31 @@ app.put("/api/update", (req, res) => {
       return;
     }
 
+    res.json();
+  });
+  app.set("newselection", newSelection);
+});
+
+app.get("/api/update/list", (req, res) => {
+  const connection = mysql.createConnection({
+    host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
+    user: "test-read",
+    password: "xnxPp6QfZbCYkY8",
+    database: "birdietest"
+  });
+
+  const newSelection = app.get("newselection");
+  const selectColumn = `SELECT (${newSelection}) AS category, COUNT(${newSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${newSelection} ORDER BY COUNT(${newSelection}) DESC`;
+
+  connection.query(selectColumn, (err, rows, fields) => {
+    if (err) {
+      res.sendStatus(500);
+      return;
+    }
+
     res.json(rows);
   });
 });
 
-// app.post("/api/update/lists", (req, res) => {
-//   const connection = mysql.createConnection({
-//     host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
-//     user: "test-read",
-//     password: "xnxPp6QfZbCYkY8",
-//     database: "birdietest"
-//   });
-//   const userSelection = req.body["selection"];
-//   const newSelection = `\`${userSelection}\``;
-//   const selectColumn = `SELECT (${newSelection}) AS category, COUNT(${newSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${newSelection} ORDER BY COUNT(${newSelection}) DESC`;
-
-//   connection.query(selectColumn, (err, rows, fields) => {
-//     if (err) {
-//       res.sendStatus(500);
-//       return;
-//     }
-
-//     res.json(rows);
-//   });
-// });
-
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => `Server running on port ${PORT}`);
