@@ -8,15 +8,16 @@ const mysql = require("mysql");
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("combined"));
+var globalNewSelection;
+
+const connection = mysql.createConnection({
+  host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
+  user: "test-read",
+  password: "xnxPp6QfZbCYkY8",
+  database: "birdietest"
+});
 
 app.get("/api/rows", (req, res) => {
-  const connection = mysql.createConnection({
-    host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
-    user: "test-read",
-    password: "xnxPp6QfZbCYkY8",
-    database: "birdietest"
-  });
-
   connection.query(
     "SHOW columns FROM census_learn_sql WHERE Type='varchar(50)'",
     (err, rows, fields) => {
@@ -30,45 +31,47 @@ app.get("/api/rows", (req, res) => {
   );
 });
 
-app.put("/api/update", (req, res) => {
-  const connection = mysql.createConnection({
-    host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
-    user: "test-read",
-    password: "xnxPp6QfZbCYkY8",
-    database: "birdietest"
-  });
+app.post("/api/update", (req, res) => {
   const userSelection = req.body["selection"];
-  const newSelection = `\`${userSelection}\``;
-  const selectColumn = `SELECT (${newSelection}) AS category, COUNT(${newSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${newSelection} ORDER BY COUNT(${newSelection}) DESC`;
+  globalNewSelection = `\`${userSelection}\``;
+
+  if (
+    globalNewSelection === null ||
+    globalNewSelection === undefined ||
+    globalNewSelection === "`undefined`"
+  ) {
+    globalNewSelection = "`class of worker`";
+  }
+
+  const selectColumn = `SELECT (${globalNewSelection}) AS category, COUNT(${globalNewSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${globalNewSelection} ORDER BY COUNT(${globalNewSelection}) DESC`;
 
   connection.query(selectColumn, (err, rows, fields) => {
     if (err) {
       res.sendStatus(500);
+      console.log(err);
       return;
     }
 
     res.json();
   });
-  app.set("newselection", newSelection);
 });
 
 app.get("/api/update/list", (req, res) => {
-  const connection = mysql.createConnection({
-    host: "birdie-test.cyosireearno.eu-west-2.rds.amazonaws.com",
-    user: "test-read",
-    password: "xnxPp6QfZbCYkY8",
-    database: "birdietest"
-  });
+  var newSelection = globalNewSelection;
 
-  const newSelection = app.get("newselection");
-  if (newSelection === null) {
-    newSelection = "class of worker";
+  if (
+    newSelection === null ||
+    newSelection === undefined ||
+    newSelection === "`undefined`"
+  ) {
+    newSelection = "`class of worker`";
   }
   const selectColumn = `SELECT (${newSelection}) AS category, COUNT(${newSelection}) AS count, AVG(age) AS average FROM census_learn_sql GROUP BY ${newSelection} ORDER BY COUNT(${newSelection}) DESC`;
 
   connection.query(selectColumn, (err, rows, fields) => {
     if (err) {
       res.sendStatus(500);
+      console.log(err);
       return;
     }
 

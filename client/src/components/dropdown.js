@@ -12,26 +12,25 @@ class Dropdown extends Component {
       selection: "class of worker",
       lists: []
     };
-    this.onChange = this.onChange.bind(this);
   }
 
-  fetchData = () => {
-    fetch("/api/rows")
-      .then(res => res.json())
-      .then(rows => this.setState({ dropdowns: rows }));
-
-    const selection = this.state.selection;
-    fetch("/api/update/list")
-      .then(res => res.json())
-      .then(rows => this.setState({ lists: rows }));
-
-    fetch("/api/update", {
-      method: "PUT",
+  fetchData = async selection => {
+    console.log(selection);
+    await fetch("/api/update", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ selection: selection })
     });
+
+    fetch("/api/rows")
+      .then(res => res.json())
+      .then(rows => this.setState({ dropdowns: rows }));
+
+    fetch("/api/update/list")
+      .then(res => res.json())
+      .then(rows => this.setState({ lists: rows }));
   };
 
   componentDidMount() {
@@ -40,6 +39,7 @@ class Dropdown extends Component {
 
   onChange(event) {
     const selection = event.target.innerHTML;
+    this.fetchData(selection);
     this.setState({ selection: selection });
   }
 
@@ -62,7 +62,6 @@ class Dropdown extends Component {
                 id={key + 1}
                 key={key}
                 onClick={event => this.onChange(event)}
-                onSelect={this.fetchData}
               >
                 {button.Field}
               </MenuItem>
