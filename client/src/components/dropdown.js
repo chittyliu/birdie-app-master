@@ -22,11 +22,11 @@ class Dropdown extends Component {
 
     let selection = this.state.selection;
     fetch("/api/update", {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ name: selection })
+      body: JSON.stringify({ selection: selection })
     })
       .then(res => res.json())
       .then(rows => this.setState({ lists: rows }));
@@ -44,6 +44,7 @@ class Dropdown extends Component {
   render() {
     const buttons = this.state.dropdowns;
     const selection = this.state.selection;
+    const lists = this.state.lists;
 
     return (
       <div className="container">
@@ -58,9 +59,8 @@ class Dropdown extends Component {
                 id={key + 1}
                 key={key}
                 onClick={event => this.onChange(event)}
-                // onSelect={this.fetchData}
-                onSelect={this.handleButtonEvents}
-                onMouseDown={this.fetchData}
+                onSelect={this.fetchData}
+                // onMouseDown={this.fetchData}
               >
                 {button.Field}
               </MenuItem>
@@ -78,7 +78,7 @@ class Dropdown extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.lists.map((list, key) => (
+              {lists.map((list, key) => (
                 <tr key={key}>
                   <td>{key + 1}</td>
                   <td>{list.category}</td>
